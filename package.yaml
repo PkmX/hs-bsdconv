@@ -1,0 +1,31 @@
+name:                bsdconv
+version:             0.0.0.0
+synopsis:            Haskell bindings to bsdconv
+description:         Please see README.md
+homepage:            https://github.com/pkmx/hs-bsdconv#readme
+license:             BSD3
+author:              PkmX
+maintainer:          pkmx.tw@gmail.com
+copyright:           2016 PkmX
+category:            Text
+
+dependencies:
+  - base
+  - inline-c
+  - bytestring
+
+library:
+  source-dirs: src
+  extra-libraries: bsdconv
+  exposed-modules:
+    - Codec.Text.Bsdconv
+  c-sources: src/Codec/Text/Bsdconv.c
+  cc-options: -Wall -Wextra -pedantic -O2
+
+executables:
+  hs-bsdconv:
+    source-dirs: .
+    main: Main.hs
+    dependencies:
+      - bsdconv
+      - bytestring
