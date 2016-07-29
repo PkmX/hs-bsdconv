@@ -49,7 +49,6 @@ bsdconvWithErrCount conv bs = unsafePerformIO $
          inst->output_mode = BSDCONV_AUTOMALLOC;
          inst->output.data = NULL;
          bsdconv(inst);
-         const char* ret = inst->output.data;
          *$(const char** pstr) = inst->output.data;
          *$(size_t* plen) = inst->output.len;
          *$(size_t* pierr) = *inst->ierr;
