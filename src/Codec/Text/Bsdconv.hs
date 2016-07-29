@@ -33,6 +33,7 @@ bsdconv conv bs =
   case bsdconvWithErrCount conv bs of
     (bs, 0, 0) -> Just bs
     _          -> Nothing
+
 -- | An alternative version of 'bsdconv' that also reports error counts.
 bsdconvWithErrCount :: String
                     -> ByteString
@@ -55,11 +56,10 @@ bsdconvWithErrCount conv bs = unsafePerformIO $
          *$(size_t* poerr) = *inst->oerr;
          bsdconv_destroy(inst);
        } |]
-       str <- peek pstr
-       len <- fromIntegral <$> peek plen
+       strlen <- (,) <$> peek pstr <*> (fromIntegral <$> peek plen)
        ierr <- peek pierr
        oerr <- peek poerr
-       bs <- BS.unsafePackMallocCStringLen (str, len)
+       bs <- BS.unsafePackMallocCStringLen strlen
        pure (bs, ierr, oerr)
   where alloca4 :: (Storable a, Storable b, Storable c, Storable d) => (Ptr a -> Ptr b -> Ptr c -> Ptr d -> IO e) -> IO e
         alloca4 f = alloca $ \a -> alloca $ \b -> alloca $ \c -> alloca $ \d -> f a b c d
